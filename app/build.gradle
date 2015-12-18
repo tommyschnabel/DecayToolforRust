@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.4'
+    compile 'com.google.guava:guava:19.0'
 }

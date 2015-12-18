@@ -5,4 +5,9 @@
     <string name="decay_finish">Decay Finish: </string>
     <string name="foundation_type_label">Foundation Type</string>
     <string name="log_off_time_label">Time since log off:</string>
+    <string name="add_timer_header">Add Timer</string>
+    <string name="button_positive">Add</string>
+    <string name="button_negative">Cancel</string>
+    <string name="save_timer_failed">Couldn\'t save timer, please try again</string>
+    <string name="add_timer_tag">Add Timer</string>
 </resources>

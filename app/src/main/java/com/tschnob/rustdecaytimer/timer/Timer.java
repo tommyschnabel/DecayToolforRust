@@ -9,6 +9,8 @@ public class Timer {
     private FoundationType foundationType;
     private Date logOffTime;
 
+    public Timer() {}
+
     public Timer(FoundationType foundationType, Date logOffTime) {
         this.foundationType = foundationType;
         this.logOffTime = logOffTime;

@@ -19,11 +19,8 @@ import java.util.List;
 public class TimerFragment extends Fragment {
     private String TAG = getClass().getName();
 
-    private ListView timerList;
     private TimerListArrayAdapter timerArrayAdapter;
-
     private List<Timer> timers;
-    private TimerCache timerCache;
 
     @Nullable
     @Override
@@ -32,8 +29,8 @@ public class TimerFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_timer, container, false);
 
-        timerList = (ListView) rootView.findViewById(R.id.timer_list);
-        timerCache = new TimerCache(context);
+        ListView timerList = (ListView) rootView.findViewById(R.id.timer_list);
+        TimerCache timerCache = new TimerCache(context);
 
         try {
             timers = timerCache.getTimers();
@@ -45,5 +42,16 @@ public class TimerFragment extends Fragment {
         timerArrayAdapter = new TimerListArrayAdapter(context, timers);
 
         return rootView;
+    }
+
+    public void updateTimers() {
+        TimerCache timerCache = new TimerCache(getActivity());
+
+        try {
+            timers = timerCache.getTimers();
+            timerArrayAdapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            Log.e(TAG, "Problem getting timers", e);
+        }
     }
 }
