@@ -1,5 +1,6 @@
 package com.tschnob.rustdecaytimer.timer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tschnob.rustdecaytimer.common.FoundationType;
 
 import java.util.Date;
@@ -30,5 +31,13 @@ public class Timer {
 
     public void setLogOffTime(Date logOffTime) {
         this.logOffTime = logOffTime;
+    }
+
+    @JsonIgnore
+    public String getUniqueId() {
+        TimeHelper helper = new TimeHelper();
+        Long finish = helper.timeUntilDecayFinish(this).toDate().getTime();
+        Long start = helper.timeUntilDecayStart(this).toDate().getTime();
+        return String.valueOf((finish + start));
     }
 }

@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.common.base.Function;
@@ -21,6 +20,7 @@ import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.common.FoundationType;
 import com.tschnob.rustdecaytimer.timer.Timer;
 import com.tschnob.rustdecaytimer.timer.TimerCache;
+import com.tschnob.rustdecaytimer.update.DecayAlarmManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public abstract class AddTimerDialog extends DialogFragment {
 
     private String TAG = getClass().getName();
 
-    private static int MAX_HOURS = 100;
+    private static int MAX_HOURS = 120;
     private static int MAX_MINUTES = 60;
 
     @NonNull
@@ -104,7 +104,10 @@ public abstract class AddTimerDialog extends DialogFragment {
                                     getActivity(),
                                     getActivity().getString(R.string.save_timer_failed),
                                     Toast.LENGTH_SHORT).show();
+                            return;
                         }
+
+                        new DecayAlarmManager().addAlarm(getContext(), timer);
                     }
                 })
                 .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
@@ -116,5 +119,7 @@ public abstract class AddTimerDialog extends DialogFragment {
                 .create();
     }
 
-    public abstract void onDismiss(DialogInterface dialog);
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+    }
 }

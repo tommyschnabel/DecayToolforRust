@@ -9,7 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"/>
 
     <TextView
         android:id="@+id/decay_start_label"
@@ -18,7 +20,8 @@
         android:text="@string/decay_start"
         android:layout_toEndOf="@id/foundation_type_image"
         android:layout_alignParentTop="true"
-        android:paddingTop="10dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
         android:textSize="18sp"/>
@@ -31,8 +34,8 @@
         android:layout_toEndOf="@id/foundation_type_image"
         android:layout_below="@id/decay_start_label"
         android:layout_alignParentBottom="true"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="20dp"
+        android:paddingEnd="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
         android:textSize="18sp"/>
@@ -51,6 +54,7 @@
         android:id="@+id/decay_finish_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="5dp"
         android:layout_toEndOf="@id/decay_finish_label"
         android:layout_alignBaseline="@id/decay_finish_label"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -63,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:paddingEnd="10dp"
         android:src="@drawable/ic_action_cancel"/>
 
 </RelativeLayout>

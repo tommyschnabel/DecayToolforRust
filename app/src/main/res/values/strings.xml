@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Rust Decay Tool</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">Rust Decay</string>
+    <string name="title_activity_main">Rust Decay Tool</string>
     <string name="decay_start">Decay Starts: </string>
     <string name="decay_finish">Decay Finish: </string>
     <string name="foundation_type_label">Foundation Type</string>
@@ -14,4 +14,8 @@
     <string name="app_name_short">Rust Decay</string>
     <string name="hour_picker_label">Hours</string>
     <string name="minute_picker_label">Minutes</string>
+    <string name="refresh">Refresh</string>
+    <string name="notification_timer_will_start" formatted="false">%s foundation will begin decay in %s</string>
+    <string name="notification_timer_will_end" formatted="false">%s foundation will be completely decayed in %s</string>
+    <string name="notification_timer_expired" formatted="false">%s foundation is completely decayed</string>
 </resources>

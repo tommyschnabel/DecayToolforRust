@@ -15,7 +15,7 @@ public class Time {
 
     public Time(long time) {
         this.hours = TimeUnit.MILLISECONDS.toHours(time);
-        this.minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+        this.minutes = TimeUnit.MILLISECONDS.toMinutes(time - TimeUnit.HOURS.toMillis(this.hours));
     }
 
     public Date toDate() {
@@ -45,6 +45,6 @@ public class Time {
 
     @Override
     public String toString() {
-        return hours + ":" + minutes;
+        return hours + "h, " + minutes + "m";
     }
 }

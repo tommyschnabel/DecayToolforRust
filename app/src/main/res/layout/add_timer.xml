@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:paddingStart="5dp"
         android:text="@string/foundation_type_label"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
@@ -47,6 +48,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="15dp"
                 android:text="@string/hour_picker_label"/>
 
             <NumberPicker
@@ -63,6 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="10dp"
                 android:text="@string/minute_picker_label"/>
 
             <NumberPicker
