@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Rust Decay Timer</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="decay_start">Decay Starts: </string>
+    <string name="decay_finish">Decay Finish: </string>
+    <string name="foundation_type_label">Foundation Type</string>
+    <string name="log_off_time_label">Time since log off:</string>
 </resources>
