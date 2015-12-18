@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -32,6 +33,9 @@ public abstract class AddTimerDialog extends DialogFragment {
 
     private String TAG = getClass().getName();
 
+    private static int MAX_HOURS = 100;
+    private static int MAX_MINUTES = 60;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -50,7 +54,13 @@ public abstract class AddTimerDialog extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, foundationTypes);
         spinner.setAdapter(adapter);
 
-        final TimePicker timePicker = (TimePicker) view.findViewById(R.id.log_off_time_picker);
+        final NumberPicker hourPicker = (NumberPicker) view.findViewById(R.id.hour_picker);
+        final NumberPicker minutePicker = (NumberPicker) view.findViewById(R.id.minute_picker);
+
+        hourPicker.setMaxValue(MAX_HOURS);
+        minutePicker.setMaxValue(MAX_MINUTES);
+        hourPicker.setMinValue(0);
+        minutePicker.setMinValue(0);
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.add_timer_header)
@@ -61,8 +71,8 @@ public abstract class AddTimerDialog extends DialogFragment {
                         Timer timer = new Timer();
                         timer.setFoundationType(FoundationType.values()[spinner.getSelectedItemPosition()]);
 
-                        int hoursSinceLogoff = timePicker.getCurrentHour();
-                        int minutesSinceLogoff = timePicker.getCurrentMinute();
+                        int hoursSinceLogoff = hourPicker.getValue();
+                        int minutesSinceLogoff = minutePicker.getValue();
 
                         long time = System.currentTimeMillis();
                         time -= TimeUnit.HOURS.toMillis(hoursSinceLogoff);
@@ -78,6 +88,11 @@ public abstract class AddTimerDialog extends DialogFragment {
                             Log.e(TAG, "Problem getting timers", e);
                             timers = new ArrayList<>();
                         }
+
+                        if (timers == null) {
+                            timers = new ArrayList<>();
+                        }
+
                         timers.add(timer);
 
                         try {

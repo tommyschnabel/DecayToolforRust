@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        pickFirst  'META-INF/NOTICE'
+        pickFirst  'META-INF/LICENSE'
+    }
 }
 
 dependencies {
