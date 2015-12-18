@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.tschnob.rustdecaytimer.timer.TimeHelper;
+import com.tschnob.rustdecaytimer.common.FoundationType;
 import com.tschnob.rustdecaytimer.timer.Timer;
 import com.tschnob.rustdecaytimer.timer.TimerCache;
 
@@ -21,6 +21,7 @@ public class DecayAlarmManager extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(TAG, "Decay alarm fired");
         TimerCache timerCache = new TimerCache(context);
 
         List<Timer> timers;
@@ -39,37 +40,53 @@ public class DecayAlarmManager extends BroadcastReceiver {
 
         DecayNotificationManager notificationManager = new DecayNotificationManager();
         for (Timer timer : timers) {
-            if (id.equals(timer.getUniqueId())) {
+            String timerId = timer.getUniqueId();
+            if (id.equals(timerId)) {
                 notificationManager.issueNotification(context, timer);
+                setNextAlarmForTimer(context, timer);
             }
         }
     }
 
-    public void addAlarm(Context context, Timer timer) {
+    public void setNextAlarmForTimer(Context context, Timer timer) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        TimeHelper timeHelper = new TimeHelper();
-        long timeUntilDecayStart = timeHelper.timeUntilDecayStart(timer).toDate().getTime();
-        long timeUntilDecayFinish = timeHelper.timeUntilDecayFinish(timer).toDate().getTime();
-        long now = System.currentTimeMillis();
+        FoundationType foundationType = timer.getFoundationType();
 
-        long alarmTime = SystemClock.elapsedRealtime();
+        long timeUntilDecayStart = timer.getLogOffTime().getTime() + foundationType.getDelay();
+        long timeUntilDecayFinish = timer.getLogOffTime().getTime() + foundationType.getDelay() + foundationType.getDuration();
+        long now = System.currentTimeMillis();
+        Long timeToAlarm = null;
 
         if (now < timeUntilDecayStart) {
-            alarmTime += timeUntilDecayStart;
+            timeToAlarm = timeUntilDecayStart - now;
         } else if (now < timeUntilDecayFinish) {
 
             //Notify an hour before the decay is finished
-            alarmTime += timeUntilDecayFinish - TimeUnit.HOURS.toMillis(1);
-        } else {
-            alarmTime += timeUntilDecayFinish;
+            timeToAlarm = timeUntilDecayFinish - TimeUnit.HOURS.toMillis(1) - now;
+        } else if (timeUntilDecayFinish <= now) {
+            timeToAlarm = timeUntilDecayFinish - now;
         }
 
-        alarmManager.set(
-                AlarmManager.ELAPSED_REALTIME,
-                alarmTime,
-                getAlarmPendingIntent(context, timer)
+        Log.i(
+                TAG,
+                "Alarm will fire in " + timeToAlarm
+                + " for " + timer.getFoundationType().toString()
         );
+
+        if (timeToAlarm != null && timeToAlarm > 0) {
+
+            alarmManager.set(
+                    AlarmManager.ELAPSED_REALTIME,
+                    SystemClock.elapsedRealtime() + timeToAlarm,
+                    getAlarmPendingIntent(context, timer)
+            );
+        }
+    }
+
+    public void cancelAlarmForTimer(Context context, Timer timer) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(getAlarmPendingIntent(context, timer));
     }
 
     private static PendingIntent getAlarmPendingIntent(Context context, Timer timer) {

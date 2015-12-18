@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Rust Decay</string>
+    <string name="app_name">Rust Decay Tool</string>
+    <string name="app_name_short">Rust Decay</string>
     <string name="title_activity_main">Rust Decay Tool</string>
     <string name="decay_start">Decay Starts: </string>
     <string name="decay_finish">Decay Finish: </string>
@@ -11,7 +12,6 @@
     <string name="save_timer_failed">Couldn\'t save timer, please try again</string>
     <string name="add_timer_tag">Add Timer</string>
     <string name="remove_timer_failed">Couldn\'t remove timer, please try again</string>
-    <string name="app_name_short">Rust Decay</string>
     <string name="hour_picker_label">Hours</string>
     <string name="minute_picker_label">Minutes</string>
     <string name="refresh">Refresh</string>

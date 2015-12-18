@@ -35,9 +35,6 @@ public class Timer {
 
     @JsonIgnore
     public String getUniqueId() {
-        TimeHelper helper = new TimeHelper();
-        Long finish = helper.timeUntilDecayFinish(this).toDate().getTime();
-        Long start = helper.timeUntilDecayStart(this).toDate().getTime();
-        return String.valueOf((finish + start));
+        return String.valueOf(logOffTime.getTime()) + foundationType;
     }
 }

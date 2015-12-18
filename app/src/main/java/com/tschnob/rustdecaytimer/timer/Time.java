@@ -19,12 +19,16 @@ public class Time {
     }
 
     public Date toDate() {
+        return new Date(toTime());
+    }
+
+    public Long toTime() {
         long time = System.currentTimeMillis();
 
         time += TimeUnit.HOURS.toMillis(hours);
         time += TimeUnit.MINUTES.toMillis(minutes);
 
-        return new Date(time);
+        return time;
     }
 
     public long getHours() {
