@@ -58,9 +58,16 @@ public class DecayAlarmManager extends BroadcastReceiver {
     }
 
     public void setAlarms(Context context, Timer timer) {
+        setAlarmForDecayStartWarning(context, timer);
         setAlarmForDecayStart(context, timer);
         setAlarmForDecayWarning(context, timer);
         setAlarmForDecayFinish(context, timer);
+    }
+
+    private void setAlarmForDecayStartWarning(Context context, Timer timer) {
+        NotificationMetaData metaData = new NotificationMetaData(timer.getUniqueId());
+        metaData.setType(NotificationMetaData.Type.DEACY_START_WARNING);
+        setAlarm(context, new TimeHelper().timeUntilDecayStart(timer).toTime() - TimeUnit.HOURS.toMillis(1), metaData);
     }
 
     private void setAlarmForDecayStart(Context context, Timer timer) {

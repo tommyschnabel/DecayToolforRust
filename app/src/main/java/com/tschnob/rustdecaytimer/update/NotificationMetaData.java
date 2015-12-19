@@ -3,6 +3,7 @@ package com.tschnob.rustdecaytimer.update;
 public class NotificationMetaData {
 
     public enum Type {
+        DEACY_START_WARNING,
         START_DECAY,
         ONE_HOUR_TO_FINISH,
         FINISH_DECAY

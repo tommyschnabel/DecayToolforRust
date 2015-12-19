@@ -24,11 +24,18 @@ public class DecayNotificationManager {
         String timerText;
 
         switch (metaData.getType()) {
-            case START_DECAY:
+            case DEACY_START_WARNING:
                 timerText = String.format(
                         context.getString(R.string.notification_timer_will_start),
                         timer.getFoundationType().toString(),
                         timeHelper.timeUntilDecayStart(timer)
+                );
+                break;
+            case START_DECAY:
+                timerText = String.format(
+                        context.getString(R.string.notification_timer_will_end),
+                        timer.getFoundationType().toString(),
+                        timeHelper.timeUntilDecayFinish(timer)
                 );
                 break;
             case ONE_HOUR_TO_FINISH:
