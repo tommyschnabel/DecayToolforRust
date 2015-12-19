@@ -1,34 +1,25 @@
 package com.tschnob.rustdecaytimer.timer;
 
+import com.tschnob.rustdecaytimer.common.FoundationType;
+
 public class TimeHelper {
 
-    public Time timeUntil(long start, long end) {
-        long diff = end - start;
-
-        if (diff <= 0) {
-            return new Time(0, 0);
-        }
-
-        return new Time(diff);
-    }
-
-    public Time timeUntil(long start, long duration, long now) {
-        return timeUntil(now, start + duration);
-    }
-
     public Time timeUntilDecayStart(Timer timer) {
-        return timeUntil(
-                timer.getLogOffTime().getTime(),
-                timer.getFoundationType().getDelay(),
-                System.currentTimeMillis()
-        );
+        long timeUntil = getStartTime(timer) - System.currentTimeMillis();
+        return new Time(Math.max(timeUntil, 0));
     }
 
     public Time timeUntilDecayFinish(Timer timer) {
-        return timeUntil(
-                timeUntilDecayStart(timer).toDate().getTime(),
-                timer.getFoundationType().getDuration(),
-                System.currentTimeMillis()
-        );
+        long timeUntil = getFinishTime(timer) - System.currentTimeMillis();
+        return new Time(Math.max(timeUntil, 0));
+    }
+
+    public long getStartTime(Timer timer) {
+        return timer.getLogOffTime().getTime() + timer.getFoundationType().getDelay();
+    }
+
+    public long getFinishTime(Timer timer) {
+        FoundationType type = timer.getFoundationType();
+        return timer.getLogOffTime().getTime() + type.getDelay() + type.getDuration();
     }
 }

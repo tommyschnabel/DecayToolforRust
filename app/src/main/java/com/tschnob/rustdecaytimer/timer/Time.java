@@ -23,9 +23,7 @@ public class Time {
     }
 
     public Long toTime() {
-        long time = System.currentTimeMillis();
-
-        time += TimeUnit.HOURS.toMillis(hours);
+        long time = TimeUnit.HOURS.toMillis(hours);
         time += TimeUnit.MINUTES.toMillis(minutes);
 
         return time;

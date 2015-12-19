@@ -3,11 +3,11 @@ package com.tschnob.rustdecaytimer.common;
 import java.util.concurrent.TimeUnit;
 
 public enum FoundationType {
-    STICK("Stick", TimeUnit.HOURS.toMillis(6L), TimeUnit.HOURS.toMillis(6L)),
-    WOOD("Wood", TimeUnit.HOURS.toMillis(12L), TimeUnit.HOURS.toMillis(24L)),
-    STONE("Stone", TimeUnit.HOURS.toMillis(18L), TimeUnit.HOURS.toMillis(48L)),
-    SHEET_METAL("Sheet Metal", TimeUnit.HOURS.toMillis(18L), TimeUnit.HOURS.toMillis(72L)),
-    ARMORED("Armored", TimeUnit.HOURS.toMillis(24L), TimeUnit.HOURS.toMillis(120L));
+    STICK("Stick", TimeUnit.MINUTES.toMillis(6), TimeUnit.MINUTES.toMillis(6)),
+    WOOD("Wood", TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(24)),
+    STONE("Stone", TimeUnit.HOURS.toMillis(18), TimeUnit.HOURS.toMillis(48)),
+    SHEET_METAL("Sheet Metal", TimeUnit.HOURS.toMillis(18), TimeUnit.HOURS.toMillis(72)),
+    ARMORED("Armored", TimeUnit.HOURS.toMillis(24), TimeUnit.HOURS.toMillis(120));
 
     private String prettyName;
     private long delay;

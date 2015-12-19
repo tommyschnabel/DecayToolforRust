@@ -107,7 +107,7 @@ public abstract class AddTimerDialog extends DialogFragment {
                             return;
                         }
 
-                        new DecayAlarmManager().setNextAlarmForTimer(getContext(), timer);
+                        new DecayAlarmManager().setAlarms(getContext(), timer);
                     }
                 })
                 .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {

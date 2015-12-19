@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.main.MainActivity;
-import com.tschnob.rustdecaytimer.timer.Time;
 import com.tschnob.rustdecaytimer.timer.TimeHelper;
 import com.tschnob.rustdecaytimer.timer.Timer;
 
@@ -19,33 +18,34 @@ public class DecayNotificationManager {
 
     public static int OPEN_APP = 1;
 
-    public void issueNotification(Context context, Timer timer) {
+    public void issueNotification(Context context, Timer timer, NotificationMetaData metaData) {
 
         TimeHelper timeHelper = new TimeHelper();
-        long timeUntilDecayStart = timeHelper.timeUntilDecayStart(timer).toDate().getTime();
-        long timeUntilDecayFinish = timeHelper.timeUntilDecayFinish(timer).toDate().getTime();
-        long now = System.currentTimeMillis();
-
         String timerText;
 
-        //Hasn't started decay yet
-        if (now < timeUntilDecayStart) {
-            timerText = String.format(
-                    context.getString(R.string.notification_timer_will_start),
-                    timer.getFoundationType().toString(),
-                    new Time(timeUntilDecayStart)
-            );
-        } else if (now < timeUntilDecayFinish) { //Has started decay, hasn't finished
-            timerText = String.format(
-                    context.getString(R.string.notification_timer_will_end),
-                    timer.getFoundationType().toString(),
-                    new Time(timeUntilDecayFinish)
-            );
-        } else { //Completely decayed
-            timerText = String.format(
-                    context.getString(R.string.notification_timer_expired),
-                    timer.getFoundationType().toString()
-            );
+        switch (metaData.getType()) {
+            case START_DECAY:
+                timerText = String.format(
+                        context.getString(R.string.notification_timer_will_start),
+                        timer.getFoundationType().toString(),
+                        timeHelper.timeUntilDecayStart(timer)
+                );
+                break;
+            case ONE_HOUR_TO_FINISH:
+                timerText = String.format(
+                        context.getString(R.string.notification_timer_will_end),
+                        timer.getFoundationType().toString(),
+                        timeHelper.timeUntilDecayFinish(timer)
+                );
+                break;
+            case FINISH_DECAY:
+                timerText = String.format(
+                        context.getString(R.string.notification_timer_expired),
+                        timer.getFoundationType().toString()
+                );
+                break;
+            default:
+                throw new IllegalArgumentException("Unhandled notification type");
         }
 
         NotificationCompat.Builder n = new NotificationCompat.Builder(context)
