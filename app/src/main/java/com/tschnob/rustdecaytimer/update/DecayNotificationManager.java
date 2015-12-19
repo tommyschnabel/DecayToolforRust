@@ -22,7 +22,7 @@ public class DecayNotificationManager {
 
         TimeHelper timeHelper = new TimeHelper();
         String timerText;
-
+    
         switch (metaData.getType()) {
             case START_DECAY:
                 timerText = String.format(
