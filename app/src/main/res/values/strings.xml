@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Rust Decay Tool</string>
-    <string name="app_name_short">Rust Decay</string>
-    <string name="title_activity_main">Rust Decay Tool</string>
+    <string name="app_name">Decay Tool for Rust</string>
+    <string name="app_name_short">Decay for Rust</string>
+    <string name="title_activity_main">Decay Tool for Rust</string>
     <string name="decay_start">Decay Starts: </string>
     <string name="decay_finish">Decay Finish: </string>
     <string name="foundation_type_label">Foundation Type</string>
