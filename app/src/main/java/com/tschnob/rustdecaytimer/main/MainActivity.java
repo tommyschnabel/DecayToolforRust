@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new AddTimerDialog() {
+
+                    //TODO Do this with a callback instead of anonymously overriding {@link #onDismiss}
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         super.onDismiss(dialog);
@@ -51,20 +53,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        toolbar.inflateMenu(R.menu.action_bar_buttons);
-        return true;
+    protected void onResume() {
+        super.onResume();
+
+        if (timerFragment != null) {
+            timerFragment.updateTimers();
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        int id = item.getItemId();
-
-        if (id == R.id.menu_item_refresh) {
-            timerFragment.updateTimers();
-            return true;
-        }
-        return false;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        toolbar.inflateMenu(R.menu.action_bar_buttons);
+        return true;
     }
 }
