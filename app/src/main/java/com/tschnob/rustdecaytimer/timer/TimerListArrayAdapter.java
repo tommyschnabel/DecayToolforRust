@@ -65,7 +65,7 @@ public class TimerListArrayAdapter extends ArrayAdapter<Timer> {
             case SHEET_METAL:
                 foundationType.setImageResource(R.mipmap.foundation_type_metal);
                 break;
-            case STICK:
+            case TWIG:
                 foundationType.setImageResource(R.mipmap.foundation_type_sticks);
                 break;
             case ARMORED:

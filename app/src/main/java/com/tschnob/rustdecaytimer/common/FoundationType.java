@@ -3,7 +3,7 @@ package com.tschnob.rustdecaytimer.common;
 import java.util.concurrent.TimeUnit;
 
 public enum FoundationType {
-    STICK("Stick", TimeUnit.HOURS.toMillis(6), TimeUnit.HOURS.toMillis(6)),
+    TWIG("Twig", TimeUnit.HOURS.toMillis(6), TimeUnit.HOURS.toMillis(6)),
     WOOD("Wood", TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(24)),
     STONE("Stone", TimeUnit.HOURS.toMillis(18), TimeUnit.HOURS.toMillis(48)),
     SHEET_METAL("Sheet Metal", TimeUnit.HOURS.toMillis(18), TimeUnit.HOURS.toMillis(72)),
