@@ -18,9 +18,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.common.FoundationType;
+import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
+import com.tschnob.rustdecaytimer.notification.NotificationMetaData;
+import com.tschnob.rustdecaytimer.notification.NotificationsCache;
 import com.tschnob.rustdecaytimer.timer.Timer;
 import com.tschnob.rustdecaytimer.timer.TimerCache;
-import com.tschnob.rustdecaytimer.update.DecayAlarmManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,7 +109,15 @@ public abstract class AddTimerDialog extends DialogFragment {
                             return;
                         }
 
-                        new DecayAlarmManager().setAlarms(getContext(), timer);
+                        List<NotificationMetaData> notifications =
+                                new DecayAlarmManager().setDefaultAlarms(getContext(), timer);
+
+                        try {
+                            new NotificationsCache(getContext()).storeNotifications(notifications, timer);
+                        } catch (IOException e) {
+                            Log.e(TAG, "Couldn't save new notifications");
+                            throw new RuntimeException(e);
+                        }
                     }
                 })
                 .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {

@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".update.DecayAlarmManager"
+            android:name=".notification.DecayAlarmManager"
             android:enabled="true" />
     </application>
 

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tschnob.rustdecaytimer.R;
-import com.tschnob.rustdecaytimer.update.DecayAlarmManager;
+import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -87,7 +87,7 @@ public class TimerListArrayAdapter extends ArrayAdapter<Timer> {
 
                 try {
                     cache.storeTimers(timers);
-                    new DecayAlarmManager().cancelAlarmForTimer(getContext(), removedTimer);
+                    new DecayAlarmManager().cancelAlarmsForTimer(getContext(), removedTimer);
                 } catch (IOException e) {
                     Log.e(TAG, "Couldn't save timers after deleting one", e);
                     timers.add(position, removedTimer);

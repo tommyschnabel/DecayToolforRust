@@ -1,4 +1,4 @@
-package com.tschnob.rustdecaytimer.update;
+package com.tschnob.rustdecaytimer.notification;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,13 +10,14 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
+import com.tschnob.rustdecaytimer.timer.Time;
 import com.tschnob.rustdecaytimer.timer.TimeHelper;
 import com.tschnob.rustdecaytimer.timer.Timer;
 import com.tschnob.rustdecaytimer.timer.TimerCache;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class DecayAlarmManager extends BroadcastReceiver {
     private String TAG = getClass().getName();
@@ -57,53 +58,79 @@ public class DecayAlarmManager extends BroadcastReceiver {
         }
     }
 
-    public void setAlarms(Context context, Timer timer) {
-        setAlarmForDecayStartWarning(context, timer);
-        setAlarmForDecayStart(context, timer);
-        setAlarmForDecayWarning(context, timer);
-        setAlarmForDecayFinish(context, timer);
-    }
-
-    private void setAlarmForDecayStartWarning(Context context, Timer timer) {
-        NotificationMetaData metaData = new NotificationMetaData(timer.getUniqueId());
-        metaData.setType(NotificationMetaData.Type.DEACY_START_WARNING);
-        setAlarm(context, new TimeHelper().timeUntilDecayStart(timer).toTime() - TimeUnit.HOURS.toMillis(1), metaData);
-    }
-
-    private void setAlarmForDecayStart(Context context, Timer timer) {
-        NotificationMetaData metaData = new NotificationMetaData(timer.getUniqueId());
-        metaData.setType(NotificationMetaData.Type.START_DECAY);
-        setAlarm(context, new TimeHelper().timeUntilDecayStart(timer).toTime(), metaData);
-    }
-
-    private void setAlarmForDecayWarning(Context context, Timer timer) {
-        NotificationMetaData metaData = new NotificationMetaData(timer.getUniqueId());
-        metaData.setType(NotificationMetaData.Type.ONE_HOUR_TO_FINISH);
-        setAlarm(
-                context,
-                new TimeHelper().timeUntilDecayFinish(timer).toTime() - TimeUnit.HOURS.toMillis(1),
-                metaData
+    public List<NotificationMetaData> setDefaultAlarms(Context context, Timer timer) {
+        List<NotificationMetaData> defaultAlarms = ImmutableList.of(
+                NotificationMetaData.create(
+                        NotificationMetaData.Type.BEFORE,
+                        NotificationMetaData.Event.DECAY_START,
+                        new Time(1, 0)
+                ),
+                NotificationMetaData.create(
+                        NotificationMetaData.Type.WHEN,
+                        NotificationMetaData.Event.DECAY_START
+                ),
+                NotificationMetaData.create(
+                        NotificationMetaData.Type.BEFORE,
+                        NotificationMetaData.Event.DECAY_FINISH,
+                        new Time(1, 0)
+        ),
+                NotificationMetaData.create(
+                        NotificationMetaData.Type.WHEN,
+                        NotificationMetaData.Event.DECAY_FINISH
+                )
         );
+
+        setAlarms(context, timer, defaultAlarms);
+        return defaultAlarms;
     }
 
-    private void setAlarmForDecayFinish(Context context, Timer timer) {
-        NotificationMetaData metaData = new NotificationMetaData(timer.getUniqueId());
-        metaData.setType(NotificationMetaData.Type.FINISH_DECAY);
-        setAlarm(context, new TimeHelper().timeUntilDecayFinish(timer).toTime(), metaData);
+    public void setSavedAlarms(Context context, Timer timer) {
+        NotificationsCache notificationsCache = new NotificationsCache(context);
+        List<NotificationMetaData> notifications;
+        try {
+            notifications = notificationsCache.getNotifications(timer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        setAlarms(context, timer, notifications);
     }
 
-    private void setAlarm(Context context, long timeToAlarm, NotificationMetaData metaData) {
+    public void setAlarms(Context context, Timer timer, List<NotificationMetaData> notifications) {
+        for (NotificationMetaData notification : notifications) {
+            setAlarm(context, timer, notification);
+        }
+    }
+
+    private void setAlarm(Context context, Timer timer, NotificationMetaData notification) {
+        long timeToAlarm;
+        TimeHelper timeHelper = new TimeHelper();
+
+        if (notification.getEvent() == NotificationMetaData.Event.DECAY_START) {
+            timeToAlarm = timeHelper.timeUntilDecayStart(timer).toTime();
+        } else { //DECAY_FINISH
+            timeToAlarm = timeHelper.timeUntilDecayFinish(timer).toTime();
+        }
+
+        if (notification.getType() == NotificationMetaData.Type.BEFORE) {
+            if (!notification.getTimeBeforeEvent().isPresent()) {
+                throw new RuntimeException("Time before event needed for setting alarms");
+            }
+
+            timeToAlarm -= notification.getTimeBeforeEvent().get().toTime();
+        }
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(
                 AlarmManager.ELAPSED_REALTIME,
                 timeToAlarm + SystemClock.elapsedRealtime(),
-                getAlarmPendingIntent(context, metaData)
+                getAlarmPendingIntent(context, notification)
         );
     }
 
-    public void cancelAlarmForTimer(Context context, Timer timer) {
+    public void cancelAlarmsForTimer(Context context, Timer timer) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        NotificationMetaData metaData = new NotificationMetaData(timer.getUniqueId());
+        NotificationMetaData metaData = NotificationMetaData.create(timer.getUniqueId());
 
         /**
          * TODO Update this if I set all three at once

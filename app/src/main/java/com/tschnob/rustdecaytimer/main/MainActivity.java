@@ -7,10 +7,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.notification.NotificationFragment;
+import com.tschnob.rustdecaytimer.timer.Timer;
 import com.tschnob.rustdecaytimer.timer.TimerFragment;
 import com.tschnob.rustdecaytimer.timer.add.AddTimerDialog;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TimerFragment timerFragment;
+    private NotificationFragment notificationFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,38 +27,80 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_activity_main);
+        setDefaultTitle();
         setSupportActionBar(toolbar);
 
         //Show the timer fragment
         timerFragment = new TimerFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_placeholder, timerFragment);
-        transaction.commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_placeholder, timerFragment)
+                .commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddTimerDialog() {
+                if (timerFragment.isVisible()) {
+                    new AddTimerDialog() {
 
-                    //TODO Do this with a callback instead of anonymously overriding {@link #onDismiss}
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        super.onDismiss(dialog);
-                        timerFragment.updateTimers();
+                        //TODO Do this with a callback instead of anonymously overriding {@link #onDismiss}
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            super.onDismiss(dialog);
+
+                            if (timerFragment.isVisible()) {
+                                timerFragment.updateTimers();
+                            }
+                        }
                     }
+                            .show(getSupportFragmentManager(), getString(R.string.add_timer_tag));
+                } else if (notificationFragment.isVisible()) {
+                    //TODO
                 }
-                        .show(getSupportFragmentManager(), getString(R.string.add_timer_tag));
             }
         });
+    }
+
+    private void setDefaultTitle() {
+        toolbar.setTitle(R.string.title_activity_main);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (notificationFragment != null && notificationFragment.isVisible()) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_placeholder, timerFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .disallowAddToBackStack()
+                    .commit();
+            setDefaultTitle();
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    public void toNotificationFragment(Timer timer) {
+        notificationFragment = new NotificationFragment();
+        notificationFragment.setTimer(timer);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_placeholder, notificationFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .disallowAddToBackStack()
+                .commit();
+
+        toolbar.setTitle(getString(R.string.title_notification_fragment));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (timerFragment != null) {
+        if (timerFragment != null && timerFragment.isVisible()) {
             timerFragment.updateTimers();
         }
     }

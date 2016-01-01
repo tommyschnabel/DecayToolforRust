@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.main.MainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +43,14 @@ public class TimerFragment extends Fragment {
         }
 
         timerList.setAdapter(new TimerListArrayAdapter(getActivity(), timers));
+        timerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).toNotificationFragment(timers.get(position));
+                }
+            }
+        });
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.timer_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

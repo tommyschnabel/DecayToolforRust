@@ -8,6 +8,8 @@ public class Time {
     private long hours;
     private long minutes;
 
+    public Time() {} //Needed for Jackson to deserialize from JSON
+
     public Time(long hours, long minutes) {
         this.hours = hours;
         this.minutes = minutes;

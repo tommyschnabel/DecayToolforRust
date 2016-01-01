@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Decay Tool for Rust</string>
-    <string name="app_name_short">Decay</string>
+    <string name="app_name_short">Decay Tool</string>
     <string name="title_activity_main">Decay Tool for Rust</string>
+    <string name="title_notification_fragment">Notifications for timer</string>
     <string name="decay_start">Decay Starts: </string>
     <string name="decay_finish">Decay Finish: </string>
     <string name="foundation_type_label">Foundation Type</string>
@@ -18,4 +19,5 @@
     <string name="notification_timer_will_start" formatted="false">%s foundation will begin decay in %s</string>
     <string name="notification_timer_will_end" formatted="false">%s foundation will be completely decayed in %s</string>
     <string name="notification_timer_expired" formatted="false">%s foundation is completely decayed</string>
+    <string name="notification_item_text" formatted="false">Notify me %s %s</string>
 </resources>
