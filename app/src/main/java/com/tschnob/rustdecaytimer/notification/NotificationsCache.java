@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.tschnob.rustdecaytimer.timer.Timer;
 
 import java.io.IOException;
@@ -32,7 +31,6 @@ public class NotificationsCache {
 
         if (!savedNotifications.isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new GuavaModule());
 
             notifications = mapper.readValue(savedNotifications, mapper.getTypeFactory()
                     .constructCollectionType(List.class, NotificationMetaData.class));
@@ -43,11 +41,14 @@ public class NotificationsCache {
 
     public void storeNotifications(List<NotificationMetaData> notifications, Timer timer) throws IOException {
         String key = getKey(timer);
-
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new GuavaModule());
 
         editor.putString(key, mapper.writeValueAsString(notifications));
+        editor.commit();
+    }
+
+    public void deleteNotificationsForTimer(Timer timer) throws IOException {
+        editor.putString(getKey(timer), "");
         editor.commit();
     }
 

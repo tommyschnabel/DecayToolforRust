@@ -46,6 +46,7 @@ public class DecayAlarmManager extends BroadcastReceiver {
         String id = metaData.getId();
 
         if (id == null || id.isEmpty()) {
+            Log.e(TAG, "Notification didn't have an id set, can't figure out which timer it belongs to");
             return;
         }
 
@@ -59,23 +60,28 @@ public class DecayAlarmManager extends BroadcastReceiver {
     }
 
     public List<NotificationMetaData> setDefaultAlarms(Context context, Timer timer) {
+        String id = timer.getUniqueId();
         List<NotificationMetaData> defaultAlarms = ImmutableList.of(
                 NotificationMetaData.create(
-                        NotificationMetaData.Type.BEFORE,
+                        id,
+                        NotificationMetaData.EventType.BEFORE,
                         NotificationMetaData.Event.DECAY_START,
                         new Time(1, 0)
                 ),
                 NotificationMetaData.create(
-                        NotificationMetaData.Type.WHEN,
+                        id,
+                        NotificationMetaData.EventType.WHEN,
                         NotificationMetaData.Event.DECAY_START
                 ),
                 NotificationMetaData.create(
-                        NotificationMetaData.Type.BEFORE,
+                        id,
+                        NotificationMetaData.EventType.BEFORE,
                         NotificationMetaData.Event.DECAY_FINISH,
                         new Time(1, 0)
         ),
                 NotificationMetaData.create(
-                        NotificationMetaData.Type.WHEN,
+                        id,
+                        NotificationMetaData.EventType.WHEN,
                         NotificationMetaData.Event.DECAY_FINISH
                 )
         );
@@ -112,12 +118,12 @@ public class DecayAlarmManager extends BroadcastReceiver {
             timeToAlarm = timeHelper.timeUntilDecayFinish(timer).toTime();
         }
 
-        if (notification.getType() == NotificationMetaData.Type.BEFORE) {
-            if (!notification.getTimeBeforeEvent().isPresent()) {
+        if (notification.getEventType() == NotificationMetaData.EventType.BEFORE) {
+            if (notification.getTimeBeforeEvent() == null) {
                 throw new RuntimeException("Time before event needed for setting alarms");
             }
 
-            timeToAlarm -= notification.getTimeBeforeEvent().get().toTime();
+            timeToAlarm -= notification.getTimeBeforeEvent().toTime();
         }
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -138,8 +144,8 @@ public class DecayAlarmManager extends BroadcastReceiver {
          * we'll just try to cancel all the types. There's probably a way to figure it out,
          * but a good way isn't apparent to me right now
          */
-        for (NotificationMetaData.Type type : NotificationMetaData.Type.values()) {
-            metaData.setType(type);
+        for (NotificationMetaData.EventType eventType : NotificationMetaData.EventType.values()) {
+            metaData.setEventType(eventType);
             alarmManager.cancel(getAlarmPendingIntent(context, metaData));
         }
     }

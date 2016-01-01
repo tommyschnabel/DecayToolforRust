@@ -25,6 +25,8 @@ public class NotificationFragment extends Fragment {
     private Timer timer;
     private List<NotificationMetaData> notifications;
 
+    private NotificationsListArrayAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,15 +43,14 @@ public class NotificationFragment extends Fragment {
             Log.e(TAG, "Problem getting notifications", e);
             notifications = new ArrayList<>();
         }
-
-        final NotificationsListArrayAdapter adapter = new NotificationsListArrayAdapter(getActivity(), notifications);
+        adapter = new NotificationsListArrayAdapter(getActivity(), notifications);
         adapter.setOnCancelListener(new NotificationsListArrayAdapter.OnCancelListener() {
             @Override
             public void onCancel(int position) {
 
                 NotificationsCache cache = new NotificationsCache(getContext());
 
-                NotificationMetaData removedNotification= notifications.remove(position);
+                NotificationMetaData removedNotification = notifications.remove(position);
 
                 try {
                     cache.storeNotifications(notifications, timer);
@@ -82,5 +83,17 @@ public class NotificationFragment extends Fragment {
 
     public void setTimer(Timer timer) {
         this.timer = timer;
+    }
+
+    public void onNotificationAdded() {
+        NotificationsCache cache = new NotificationsCache(getContext());
+
+        try {
+            adapter.setNotifications(cache.getNotifications(timer));
+        } catch (IOException e) {
+            Log.e(TAG, "Couldn't get the new notifications, triggering a back press to go to last screen." +
+                    " *Hopefully* things will load right if they click again");
+            getActivity().onBackPressed();
+        }
     }
 }

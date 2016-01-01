@@ -24,7 +24,7 @@ public class DecayNotificationManager {
         String timerText;
 
         if (notification.getEvent() == NotificationMetaData.Event.DECAY_START
-                && notification.getType() == NotificationMetaData.Type.BEFORE) {
+                && notification.getEventType() == NotificationMetaData.EventType.BEFORE) {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_will_start),
@@ -32,7 +32,7 @@ public class DecayNotificationManager {
                     timeHelper.timeUntilDecayStart(timer)
             );
         } else if (notification.getEvent() == NotificationMetaData.Event.DECAY_START
-                && notification.getType() == NotificationMetaData.Type.WHEN) {
+                && notification.getEventType() == NotificationMetaData.EventType.WHEN) {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_will_end),
@@ -40,7 +40,7 @@ public class DecayNotificationManager {
                     timeHelper.timeUntilDecayFinish(timer)
             );
         } else if (notification.getEvent() == NotificationMetaData.Event.DECAY_FINISH
-                && notification.getType() == NotificationMetaData.Type.BEFORE) {
+                && notification.getEventType() == NotificationMetaData.EventType.BEFORE) {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_will_end),
@@ -48,7 +48,7 @@ public class DecayNotificationManager {
                     timeHelper.timeUntilDecayFinish(timer)
             );
         } else if (notification.getEvent() == NotificationMetaData.Event.DECAY_FINISH
-                && notification.getType() == NotificationMetaData.Type.WHEN) {
+                && notification.getEventType() == NotificationMetaData.EventType.WHEN) {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_expired),

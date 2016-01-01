@@ -44,7 +44,7 @@ public abstract class AddTimerDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.add_timer, null);
 
-        //TODO Make this not shitty
+        //TODO Make this not shitty, and do the same for {@link AddNotificationDialog}
         String[] foundationTypes = Lists.transform(Arrays.asList(FoundationType.values()), new Function<FoundationType, String>() {
             @Override
             public String apply(FoundationType input) {

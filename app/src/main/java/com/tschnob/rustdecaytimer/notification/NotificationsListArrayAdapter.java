@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tschnob.rustdecaytimer.R;
-import com.tschnob.rustdecaytimer.timer.TimeHelper;
 
 import java.util.List;
 
@@ -34,6 +33,16 @@ public class NotificationsListArrayAdapter extends ArrayAdapter<NotificationMeta
 
         this.context = context;
         this.notifications = notifications;
+    }
+
+    @Override
+    public int getCount() {
+        return notifications.size();
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 1; //All types are the same
     }
 
     @Override
@@ -63,16 +72,21 @@ public class NotificationsListArrayAdapter extends ArrayAdapter<NotificationMeta
 
     private static String generateNotificationText(NotificationMetaData notification, String unformattedText) {
         String beforeEventText = "";
-        if (notification.getType() == NotificationMetaData.Type.BEFORE
-                && notification.getTimeBeforeEvent().isPresent()) {
+        if (notification.getEventType() == NotificationMetaData.EventType.BEFORE
+                && notification.getTimeBeforeEvent() != null) {
 
-            beforeEventText = notification.getTimeBeforeEvent().get().toString() + " ";
+            beforeEventText = notification.getTimeBeforeEvent().toString() + " ";
         }
 
         return String.format(
                 unformattedText,
-                beforeEventText + notification.getType().toString().toLowerCase(),
+                beforeEventText + notification.getEventType().toString().toLowerCase(),
                 notification.getEvent().toString().toLowerCase()
         );
+    }
+
+    public void setNotifications(List<NotificationMetaData> notifications) {
+        this.notifications = notifications;
+        this.notifyDataSetChanged();
     }
 }

@@ -1,18 +1,16 @@
 package com.tschnob.rustdecaytimer.notification;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Optional;
 import com.tschnob.rustdecaytimer.timer.Time;
 
 public class NotificationMetaData {
 
-    public enum Type {
+    public enum EventType {
         BEFORE("Before"),
         WHEN("When");
 
         private String name;
 
-        Type(String name) {
+        EventType(String name) {
             this.name = name;
         }
 
@@ -32,31 +30,32 @@ public class NotificationMetaData {
             this.name = name;
         }
 
-
         @Override
         public String toString() {
             return name;
         }
     }
 
-    private Type type;
+    private EventType eventType;
     private Event event;
-    private Optional<Time> timeBeforeEvent = Optional.absent();
+    private Time timeBeforeEvent;
     private String id;
 
     public NotificationMetaData() {}
 
-    public static NotificationMetaData create(Type type, Event event, Time timeBeforeEvent) {
+    public static NotificationMetaData create(String id, EventType eventType, Event event, Time timeBeforeEvent) {
         NotificationMetaData notification = new NotificationMetaData();
-        notification.setType(type);
+        notification.setId(id);
+        notification.setEventType(eventType);
         notification.setEvent(event);
-        notification.setTimeBeforeEvent(Optional.fromNullable(timeBeforeEvent));
+        notification.setTimeBeforeEvent(timeBeforeEvent);
         return notification;
     }
 
-    public static NotificationMetaData create(Type type, Event event) {
+    public static NotificationMetaData create(String id, EventType eventType, Event event) {
         NotificationMetaData notification = new NotificationMetaData();
-        notification.setType(type);
+        notification.setId(id);
+        notification.setEventType(eventType);
         notification.setEvent(event);
         return notification;
     }
@@ -67,12 +66,12 @@ public class NotificationMetaData {
         return notification;
     }
 
-    public Type getType() {
-        return type;
+    public EventType getEventType() {
+        return eventType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
 
     public Event getEvent() {
@@ -91,15 +90,11 @@ public class NotificationMetaData {
         this.id = id;
     }
 
-    public Optional<Time> getTimeBeforeEvent() {
+    public Time getTimeBeforeEvent() {
         return timeBeforeEvent;
     }
 
-    public void setTimeBeforeEvent(Optional<Time> timeBeforeEvent) {
+    public void setTimeBeforeEvent(Time timeBeforeEvent) {
         this.timeBeforeEvent = timeBeforeEvent;
     }
-
-//    public void setTimeBeforeEvent(Time timeBeforeEvent) {
-//        this.timeBeforeEvent = Optional.fromNullable(timeBeforeEvent);
-//    }
 }

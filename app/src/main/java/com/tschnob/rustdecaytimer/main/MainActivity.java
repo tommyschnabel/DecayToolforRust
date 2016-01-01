@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.notification.NotificationFragment;
+import com.tschnob.rustdecaytimer.notification.add.AddNotificationDialog;
 import com.tschnob.rustdecaytimer.timer.Timer;
 import com.tschnob.rustdecaytimer.timer.TimerFragment;
 import com.tschnob.rustdecaytimer.timer.add.AddTimerDialog;
@@ -55,8 +56,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                             .show(getSupportFragmentManager(), getString(R.string.add_timer_tag));
+
                 } else if (notificationFragment.isVisible()) {
-                    //TODO
+                    new AddNotificationDialog(
+                            new AddNotificationDialog.NotificationAddedCallback() {
+                                @Override
+                                public void onNotificationAdded() {
+                                    notificationFragment.onNotificationAdded();
+                                }
+                            },
+                            notificationFragment.getTimer()
+                    ).show(getSupportFragmentManager(), getString(R.string.add_notification_dialog_tag));
                 }
             }
         });
