@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -136,17 +137,20 @@ public class DecayAlarmManager extends BroadcastReceiver {
 
     public void cancelAlarmsForTimer(Context context, Timer timer) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        NotificationMetaData metaData = NotificationMetaData.create(timer.getUniqueId());
+        List<NotificationMetaData> notifications;
 
-        /**
-         * TODO Update this if I set all three at once
-         * Since we don't have a great way to figure out what type of notification it is,
-         * we'll just try to cancel all the types. There's probably a way to figure it out,
-         * but a good way isn't apparent to me right now
-         */
-        for (NotificationMetaData.EventType eventType : NotificationMetaData.EventType.values()) {
-            metaData.setEventType(eventType);
-            alarmManager.cancel(getAlarmPendingIntent(context, metaData));
+        try {
+            //Get the notifications
+            notifications = new NotificationsCache(context).getNotifications(timer);
+        } catch (IOException e) {
+            Log.e(TAG, "Couldn't get notifications, so couldn't cancel alarms for timer");
+            Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException(e);
+        }
+
+        //Cancel each notification
+        for (NotificationMetaData notification : notifications) {
+            alarmManager.cancel(getAlarmPendingIntent(context, notification));
         }
     }
 
@@ -155,7 +159,7 @@ public class DecayAlarmManager extends BroadcastReceiver {
         try {
             action = new ObjectMapper().writeValueAsString(metaData);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Couldn't encode notificaiton meta data", e);
+            throw new RuntimeException("Couldn't encode notification meta data", e);
         }
 
         //Make the intents to update the notification alarm

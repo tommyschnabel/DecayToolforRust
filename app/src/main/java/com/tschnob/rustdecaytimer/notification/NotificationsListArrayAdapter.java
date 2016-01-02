@@ -10,14 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.common.OnCancelListener;
 
 import java.util.List;
 
 public class NotificationsListArrayAdapter extends ArrayAdapter<NotificationMetaData> {
-
-    public interface OnCancelListener {
-        void onCancel(int position);
-    }
 
     private LayoutInflater layoutInflater;
     private Context context;

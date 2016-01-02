@@ -1,6 +1,5 @@
 package com.tschnob.rustdecaytimer.main;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.common.ThingHappenedCallback;
 import com.tschnob.rustdecaytimer.notification.NotificationFragment;
 import com.tschnob.rustdecaytimer.notification.add.AddNotificationDialog;
 import com.tschnob.rustdecaytimer.timer.Timer;
@@ -43,30 +43,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (timerFragment.isVisible()) {
-                    new AddTimerDialog() {
+                    new AddTimerDialog()
+                            .setTimerAddedCallback(new ThingHappenedCallback() {
+                                @Override
+                                public void onThingHappened() {
 
-                        //TODO Do this with a callback instead of anonymously overriding {@link #onDismiss}
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            super.onDismiss(dialog);
-
-                            if (timerFragment.isVisible()) {
-                                timerFragment.updateTimers();
-                            }
-                        }
-                    }
+                                    if (timerFragment.isVisible()) {
+                                        timerFragment.updateTimers();
+                                    }
+                                }
+                            })
                             .show(getSupportFragmentManager(), getString(R.string.add_timer_tag));
 
                 } else if (notificationFragment.isVisible()) {
-                    new AddNotificationDialog(
-                            new AddNotificationDialog.NotificationAddedCallback() {
+
+                    new AddNotificationDialog()
+                            .setNotificationAddedCallback(new ThingHappenedCallback() {
                                 @Override
-                                public void onNotificationAdded() {
+                                public void onThingHappened() {
                                     notificationFragment.onNotificationAdded();
                                 }
-                            },
-                            notificationFragment.getTimer()
-                    ).show(getSupportFragmentManager(), getString(R.string.add_notification_dialog_tag));
+                            })
+                            .setTimer(notificationFragment.getTimer())
+                            .show(getSupportFragmentManager(), getString(R.string.add_notification_dialog_tag));
                 }
             }
         });

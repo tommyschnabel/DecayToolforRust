@@ -11,15 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.common.OnCancelListener;
 import com.tschnob.rustdecaytimer.main.MainActivity;
+import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
+import com.tschnob.rustdecaytimer.notification.NotificationsCache;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimerFragment extends Fragment {
+public class TimerFragment extends Fragment
+                           implements OnCancelListener {
     private String TAG = getClass().getName();
 
     private ListView timerList;
@@ -42,7 +47,13 @@ public class TimerFragment extends Fragment {
             timers = new ArrayList<>();
         }
 
-        timerList.setAdapter(new TimerListArrayAdapter(getActivity(), timers));
+        timerList.setAdapter(
+                new TimerListArrayAdapter(
+                        getActivity(),
+                        timers,
+                        this
+                )
+        );
         timerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -69,9 +80,30 @@ public class TimerFragment extends Fragment {
 
         try {
             timers = timerCache.getTimers();
-            timerList.setAdapter(new TimerListArrayAdapter(getActivity(), timers));
+            timerList.setAdapter(new TimerListArrayAdapter(getActivity(), timers, this));
         } catch (IOException e) {
             Log.e(TAG, "Problem getting timers", e);
+        }
+    }
+
+    @Override
+    public void onCancel(int position) {
+
+        TimerCache cache = new TimerCache(getContext());
+        Timer removedTimer = timers.remove(position);
+
+        try {
+            cache.storeTimers(timers);
+            new DecayAlarmManager().cancelAlarmsForTimer(getContext(), removedTimer);
+            new NotificationsCache(getContext()).deleteNotificationsForTimer(removedTimer);
+        } catch (IOException e) {
+            Log.e(TAG, "Couldn't save timers after deleting one", e);
+            timers.add(position, removedTimer);
+            Toast.makeText(
+                    getContext(),
+                    getContext().getString(R.string.remove_timer_failed),
+                    Toast.LENGTH_SHORT
+            ).show();
         }
     }
 }

@@ -14,10 +14,9 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.common.FoundationType;
+import com.tschnob.rustdecaytimer.common.ThingHappenedCallback;
 import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
 import com.tschnob.rustdecaytimer.notification.NotificationMetaData;
 import com.tschnob.rustdecaytimer.notification.NotificationsCache;
@@ -26,17 +25,18 @@ import com.tschnob.rustdecaytimer.timer.TimerCache;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AddTimerDialog extends DialogFragment {
+public class AddTimerDialog extends DialogFragment {
 
     private String TAG = getClass().getName();
 
     private static int MAX_HOURS = 120;
     private static int MAX_MINUTES = 60;
+
+    private ThingHappenedCallback timerAddedCallback;
 
     @NonNull
     @Override
@@ -44,13 +44,12 @@ public abstract class AddTimerDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.add_timer, null);
 
-        //TODO Make this not shitty, and do the same for {@link AddNotificationDialog}
-        String[] foundationTypes = Lists.transform(Arrays.asList(FoundationType.values()), new Function<FoundationType, String>() {
-            @Override
-            public String apply(FoundationType input) {
-                return input.toString();
-            }
-        }).toArray(new String[FoundationType.values().length]);
+        FoundationType[] foundationTypeValues = FoundationType.values();
+        String[] foundationTypes = new String[foundationTypeValues.length];
+        for (int i = 0; i < FoundationType.values().length; i++) {
+            FoundationType eventType = foundationTypeValues[i];
+            foundationTypes[i] = eventType.toString();
+        }
 
         final Spinner spinner = (Spinner) view.findViewById(R.id.foundation_type_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, foundationTypes);
@@ -118,6 +117,10 @@ public abstract class AddTimerDialog extends DialogFragment {
                             Log.e(TAG, "Couldn't save new notifications");
                             throw new RuntimeException(e);
                         }
+
+                        if (timerAddedCallback != null) {
+                            timerAddedCallback.onThingHappened();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
@@ -129,7 +132,8 @@ public abstract class AddTimerDialog extends DialogFragment {
                 .create();
     }
 
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
+    public AddTimerDialog setTimerAddedCallback(ThingHappenedCallback timerAddedCallback) {
+        this.timerAddedCallback = timerAddedCallback;
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.common.OnCancelListener;
 import com.tschnob.rustdecaytimer.timer.Timer;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class NotificationFragment extends Fragment {
             notifications = new ArrayList<>();
         }
         adapter = new NotificationsListArrayAdapter(getActivity(), notifications);
-        adapter.setOnCancelListener(new NotificationsListArrayAdapter.OnCancelListener() {
+        adapter.setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(int position) {
 
@@ -75,7 +76,6 @@ public class NotificationFragment extends Fragment {
 
         return rootView;
     }
-
 
     public Timer getTimer() {
         return timer;

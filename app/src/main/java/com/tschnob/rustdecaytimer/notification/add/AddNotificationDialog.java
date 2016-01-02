@@ -1,6 +1,5 @@
 package com.tschnob.rustdecaytimer.notification.add;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,8 +15,8 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.common.base.Optional;
 import com.tschnob.rustdecaytimer.R;
+import com.tschnob.rustdecaytimer.common.ThingHappenedCallback;
 import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
 import com.tschnob.rustdecaytimer.notification.NotificationMetaData;
 import com.tschnob.rustdecaytimer.notification.NotificationsCache;
@@ -27,34 +26,19 @@ import com.tschnob.rustdecaytimer.timer.Timer;
 import java.io.IOException;
 import java.util.List;
 
-@SuppressLint("ValidFragment") //See comment on constructor's `@SuppressLint("ValidFragment")`
 public class AddNotificationDialog extends DialogFragment {
-
-    public interface NotificationAddedCallback {
-        void onNotificationAdded();
-    }
 
     private static int MAX_HOURS = 120;
     private static int MAX_MINUTES = 60;
 
     private String TAG = getClass().getName();
 
-    private NotificationAddedCallback notificationAddedCallback;
+    private ThingHappenedCallback notificationAddedCallback;
     private Timer timer;
 
     private int beforeEventPosition = 0;
     private NotificationMetaData.Event[] eventValues;
     private NotificationMetaData.EventType[] eventTypeValues;
-
-    @SuppressLint("ValidFragment") //Android likes you to use default constructors,
-                                   // but this dialog is pretty dependent on these things
-    public AddNotificationDialog(
-            NotificationAddedCallback notificationAddedCallback,
-            Timer timer
-    ) {
-        this.notificationAddedCallback = notificationAddedCallback;
-        this.timer = timer;
-    }
 
     @NonNull
     @Override
@@ -175,7 +159,7 @@ public class AddNotificationDialog extends DialogFragment {
                             notificationsCache.storeNotifications(notifications, timer);
 
                             //Trigger the callback since the save succeeded
-                            notificationAddedCallback.onNotificationAdded();
+                            notificationAddedCallback.onThingHappened();
 
                             //Update the alarms for the timer
                             DecayAlarmManager decayAlarmManager = new DecayAlarmManager();
@@ -194,5 +178,15 @@ public class AddNotificationDialog extends DialogFragment {
                     }
                 })
                 .create();
+    }
+
+    public AddNotificationDialog setNotificationAddedCallback(ThingHappenedCallback notificationAddedCallback) {
+        this.notificationAddedCallback = notificationAddedCallback;
+        return this;
+    }
+
+    public AddNotificationDialog setTimer(Timer timer) {
+        this.timer = timer;
+        return this;
     }
 }
