@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.tschnob.rustdecaytimer.R;
-import com.tschnob.rustdecaytimer.common.FoundationType;
+import com.tschnob.rustdecaytimer.common.ItemType;
 import com.tschnob.rustdecaytimer.common.ThingHappenedCallback;
 import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
 import com.tschnob.rustdecaytimer.notification.NotificationMetaData;
@@ -44,15 +44,15 @@ public class AddTimerDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.add_timer, null);
 
-        FoundationType[] foundationTypeValues = FoundationType.values();
-        String[] foundationTypes = new String[foundationTypeValues.length];
-        for (int i = 0; i < FoundationType.values().length; i++) {
-            FoundationType eventType = foundationTypeValues[i];
-            foundationTypes[i] = eventType.toString();
+        ItemType[] itemTypeValues = ItemType.values();
+        String[] itemTypes = new String[itemTypeValues.length];
+        for (int i = 0; i < ItemType.values().length; i++) {
+            ItemType eventType = itemTypeValues[i];
+            itemTypes[i] = eventType.toString();
         }
 
         final Spinner spinner = (Spinner) view.findViewById(R.id.foundation_type_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, foundationTypes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, itemTypes);
         spinner.setAdapter(adapter);
 
         final NumberPicker hourPicker = (NumberPicker) view.findViewById(R.id.hour_picker);
@@ -70,7 +70,7 @@ public class AddTimerDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Timer timer = new Timer();
-                        timer.setFoundationType(FoundationType.values()[spinner.getSelectedItemPosition()]);
+                        timer.setItemType(ItemType.values()[spinner.getSelectedItemPosition()]);
 
                         int hoursSinceLogoff = hourPicker.getValue();
                         int minutesSinceLogoff = minutePicker.getValue();

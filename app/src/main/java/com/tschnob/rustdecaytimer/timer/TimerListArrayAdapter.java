@@ -51,28 +51,31 @@ public class TimerListArrayAdapter extends ArrayAdapter<Timer> {
 
         TextView decayStart = (TextView) convertView.findViewById(R.id.decay_start_time);
         TextView decayFinish = (TextView) convertView.findViewById(R.id.decay_finish_time);
-        ImageView foundationType = (ImageView) convertView.findViewById(R.id.foundation_type_image);
+        ImageView itemType = (ImageView) convertView.findViewById(R.id.foundation_type_image);
         ImageView cancelTimerButton = (ImageView) convertView.findViewById(R.id.cancel_timer);
 
         Timer timer = timers.get(position);
         TimeHelper timeHelper = new TimeHelper();
 
-        switch (timer.getFoundationType()) {
+        switch (timer.getItemType()) {
 
             case WOOD:
-                foundationType.setImageResource(R.mipmap.foundation_type_wood);
+                itemType.setImageResource(R.mipmap.foundation_type_wood);
                 break;
             case STONE:
-                foundationType.setImageResource(R.mipmap.foundation_type_stone);
+                itemType.setImageResource(R.mipmap.foundation_type_stone);
                 break;
             case SHEET_METAL:
-                foundationType.setImageResource(R.mipmap.foundation_type_metal);
+                itemType.setImageResource(R.mipmap.foundation_type_metal);
                 break;
             case TWIG:
-                foundationType.setImageResource(R.mipmap.foundation_type_sticks);
+                itemType.setImageResource(R.mipmap.foundation_type_sticks);
                 break;
             case ARMORED:
-                foundationType.setImageResource(R.mipmap.high_quality_metal);
+                itemType.setImageResource(R.mipmap.high_quality_metal);
+                break;
+            case SECRET_STASH:
+                itemType.setImageResource(R.mipmap.secret_stash);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported foundation type");

@@ -1,28 +1,28 @@
 package com.tschnob.rustdecaytimer.timer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tschnob.rustdecaytimer.common.FoundationType;
+import com.tschnob.rustdecaytimer.common.ItemType;
 
 import java.util.Date;
 
 public class Timer {
 
-    private FoundationType foundationType;
+    private ItemType itemType;
     private Date logOffTime;
 
     public Timer() {}
 
-    public Timer(FoundationType foundationType, Date logOffTime) {
-        this.foundationType = foundationType;
+    public Timer(ItemType itemType, Date logOffTime) {
+        this.itemType = itemType;
         this.logOffTime = logOffTime;
     }
 
-    public FoundationType getFoundationType() {
-        return foundationType;
+    public ItemType getItemType() {
+        return itemType;
     }
 
-    public void setFoundationType(FoundationType foundationType) {
-        this.foundationType = foundationType;
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
     }
 
     public Date getLogOffTime() {
@@ -35,6 +35,6 @@ public class Timer {
 
     @JsonIgnore
     public String getUniqueId() {
-        return String.valueOf(logOffTime.getTime()) + foundationType;
+        return String.valueOf(logOffTime.getTime()) + itemType;
     }
 }

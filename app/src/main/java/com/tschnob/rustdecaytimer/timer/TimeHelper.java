@@ -1,6 +1,6 @@
 package com.tschnob.rustdecaytimer.timer;
 
-import com.tschnob.rustdecaytimer.common.FoundationType;
+import com.tschnob.rustdecaytimer.common.ItemType;
 
 public class TimeHelper {
 
@@ -15,11 +15,11 @@ public class TimeHelper {
     }
 
     public long getStartTime(Timer timer) {
-        return timer.getLogOffTime().getTime() + timer.getFoundationType().getDelay();
+        return timer.getLogOffTime().getTime() + timer.getItemType().getDelay();
     }
 
     public long getFinishTime(Timer timer) {
-        FoundationType type = timer.getFoundationType();
+        ItemType type = timer.getItemType();
         return timer.getLogOffTime().getTime() + type.getDelay() + type.getDuration();
     }
 }

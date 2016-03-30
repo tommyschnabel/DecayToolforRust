@@ -11,7 +11,7 @@
     <string name="button_negative">Cancel</string>
     <string name="refresh">Refresh</string>
 
-    <string name="foundation_type_label">Foundation Type</string>
+    <string name="item_type_label">Item Type</string>
     <string name="log_off_time_label">Time since log off:</string>
     <string name="add_timer_header">Add Timer</string>
     <string name="add_timer_tag">Add Timer</string>
@@ -22,9 +22,9 @@
     <string name="hour_picker_label">Hours</string>
     <string name="minute_picker_label">Minutes</string>
 
-    <string name="notification_timer_will_start" formatted="false">%s foundation will begin decay in %s</string>
-    <string name="notification_timer_will_end" formatted="false">%s foundation will be completely decayed in %s</string>
-    <string name="notification_timer_expired" formatted="false">%s foundation is completely decayed</string>
+    <string name="notification_timer_will_start" formatted="false">%s will begin decay in %s</string>
+    <string name="notification_timer_will_end" formatted="false">%s will be completely decayed in %s</string>
+    <string name="notification_timer_expired" formatted="false">%s is completely decayed</string>
     <string name="notification_item_text" formatted="false">Notify me %s %s</string>
 
     <string name="add_notification_dialog_tag">Add Notification</string>

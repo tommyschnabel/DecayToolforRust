@@ -28,7 +28,7 @@ public class DecayNotificationManager {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_will_start),
-                    timer.getFoundationType().toString(),
+                    timer.getItemType().toString(),
                     timeHelper.timeUntilDecayStart(timer)
             );
         } else if (notification.getEvent() == NotificationMetaData.Event.DECAY_START
@@ -36,7 +36,7 @@ public class DecayNotificationManager {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_will_end),
-                    timer.getFoundationType().toString(),
+                    timer.getItemType().toString(),
                     timeHelper.timeUntilDecayFinish(timer)
             );
         } else if (notification.getEvent() == NotificationMetaData.Event.DECAY_FINISH
@@ -44,7 +44,7 @@ public class DecayNotificationManager {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_will_end),
-                    timer.getFoundationType().toString(),
+                    timer.getItemType().toString(),
                     timeHelper.timeUntilDecayFinish(timer)
             );
         } else if (notification.getEvent() == NotificationMetaData.Event.DECAY_FINISH
@@ -52,7 +52,7 @@ public class DecayNotificationManager {
 
             timerText = String.format(
                     context.getString(R.string.notification_timer_expired),
-                    timer.getFoundationType().toString()
+                    timer.getItemType().toString()
             );
         } else {
             throw new IllegalArgumentException("Unhandled notification event/type");

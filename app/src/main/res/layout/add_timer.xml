@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:paddingStart="5dp"
-        android:text="@string/foundation_type_label"
+        android:text="@string/item_type_label"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
         android:textSize="18sp"/>
