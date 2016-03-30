@@ -44,20 +44,19 @@ public class NotificationFragment extends Fragment {
             Log.e(TAG, "Problem getting notifications", e);
             notifications = new ArrayList<>();
         }
+
         adapter = new NotificationsListArrayAdapter(getActivity(), notifications);
         adapter.setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(int position) {
 
                 NotificationsCache cache = new NotificationsCache(getContext());
-
                 NotificationMetaData removedNotification = notifications.remove(position);
 
                 try {
                     cache.storeNotifications(notifications, timer);
                     DecayAlarmManager alarmManager = new DecayAlarmManager();
-                    alarmManager.cancelAlarmsForTimer(getContext(), timer);
-                    alarmManager.setAlarms(context, timer, notifications);
+                    alarmManager.cancelAlarm(getContext(), notifications.get(position));
                 } catch (IOException e) {
                     Log.e(TAG, "Couldn't save notification after deleting one", e);
                     notifications.add(position, removedNotification);

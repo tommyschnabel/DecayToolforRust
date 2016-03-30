@@ -135,6 +135,11 @@ public class DecayAlarmManager extends BroadcastReceiver {
         );
     }
 
+    public void cancelAlarm(Context context, NotificationMetaData notifcation) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(getAlarmPendingIntent(context, notifcation));
+    }
+
     public void cancelAlarmsForTimer(Context context, Timer timer) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         List<NotificationMetaData> notifications;
