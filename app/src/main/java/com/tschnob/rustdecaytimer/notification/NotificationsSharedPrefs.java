@@ -10,16 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsCache {
+public class NotificationsSharedPrefs {
 
     private static String NOTIFICATION_SHARED_PREFS = "notification shared prefs";
-
     private static String NOTIFICATIONS = "notifications";
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
-    public NotificationsCache(Context context) {
+    public NotificationsSharedPrefs(Context context) {
         prefs = context.getSharedPreferences(NOTIFICATION_SHARED_PREFS, Context.MODE_PRIVATE);
         editor = prefs.edit();
     }

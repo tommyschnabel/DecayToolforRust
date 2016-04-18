@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-public class TimerCache {
+public class TimerSharedPrefs {
 
     private static String TIMER_SHARED_PREFS = "timer shared prefs";
     private static String TIMERS = "timers";
@@ -18,7 +18,7 @@ public class TimerCache {
 
     private List<Timer> timers;
 
-    public TimerCache(Context context) {
+    public TimerSharedPrefs(Context context) {
         prefs = context.getSharedPreferences(TIMER_SHARED_PREFS, Context.MODE_PRIVATE);
         editor = prefs.edit();
     }

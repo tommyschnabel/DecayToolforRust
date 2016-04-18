@@ -19,7 +19,7 @@ import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.common.ThingHappenedCallback;
 import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
 import com.tschnob.rustdecaytimer.notification.NotificationMetaData;
-import com.tschnob.rustdecaytimer.notification.NotificationsCache;
+import com.tschnob.rustdecaytimer.notification.NotificationsSharedPrefs;
 import com.tschnob.rustdecaytimer.timer.Time;
 import com.tschnob.rustdecaytimer.timer.Timer;
 
@@ -151,19 +151,19 @@ public class AddNotificationDialog extends DialogFragment {
                         }
 
                         //Save the notification
-                        NotificationsCache notificationsCache = new NotificationsCache(getContext());
+                        NotificationsSharedPrefs notificationsSharedPrefs = new NotificationsSharedPrefs(getContext());
                         try {
-                            List<NotificationMetaData> notifications = notificationsCache.getNotifications(timer);
+                            List<NotificationMetaData> notifications = notificationsSharedPrefs.getNotifications(timer);
 
                             notifications.add(notification);
-                            notificationsCache.storeNotifications(notifications, timer);
+                            notificationsSharedPrefs.storeNotifications(notifications, timer);
 
                             //Trigger the callback since the save succeeded
                             notificationAddedCallback.onThingHappened();
 
                             //Update the alarms for the timer
                             DecayAlarmManager decayAlarmManager = new DecayAlarmManager();
-                            decayAlarmManager.cancelAlarmsForTimer(getContext(), timer);
+                            decayAlarmManager.cancelAllAlarmsForTimer(getContext(), timer);
                             decayAlarmManager.setAlarms(getContext(), timer, notifications);
 
                         } catch (IOException e) {

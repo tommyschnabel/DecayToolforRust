@@ -17,7 +17,7 @@ import com.tschnob.rustdecaytimer.R;
 import com.tschnob.rustdecaytimer.common.OnCancelListener;
 import com.tschnob.rustdecaytimer.main.MainActivity;
 import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
-import com.tschnob.rustdecaytimer.notification.NotificationsCache;
+import com.tschnob.rustdecaytimer.notification.NotificationsSharedPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,10 +38,10 @@ public class TimerFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_timer, container, false);
 
         timerList = (ListView) rootView.findViewById(R.id.timer_list);
-        TimerCache timerCache = new TimerCache(context);
+        TimerSharedPrefs timerSharedPrefs = new TimerSharedPrefs(context);
 
         try {
-            timers = timerCache.getTimers();
+            timers = timerSharedPrefs.getTimers();
         } catch (IOException e) {
             Log.e(TAG, "Problem getting timers", e);
             timers = new ArrayList<>();
@@ -76,10 +76,10 @@ public class TimerFragment extends Fragment
     }
 
     public void updateTimers() {
-        TimerCache timerCache = new TimerCache(getActivity());
+        TimerSharedPrefs timerSharedPrefs = new TimerSharedPrefs(getActivity());
 
         try {
-            timers = timerCache.getTimers();
+            timers = timerSharedPrefs.getTimers();
             timerList.setAdapter(new TimerListArrayAdapter(getActivity(), timers, this));
         } catch (IOException e) {
             Log.e(TAG, "Problem getting timers", e);
@@ -89,13 +89,13 @@ public class TimerFragment extends Fragment
     @Override
     public void onCancel(int position) {
 
-        TimerCache cache = new TimerCache(getContext());
+        TimerSharedPrefs cache = new TimerSharedPrefs(getContext());
         Timer removedTimer = timers.remove(position);
 
         try {
             cache.storeTimers(timers);
-            new DecayAlarmManager().cancelAlarmsForTimer(getContext(), removedTimer);
-            new NotificationsCache(getContext()).deleteNotificationsForTimer(removedTimer);
+            new DecayAlarmManager().cancelAllAlarmsForTimer(getContext(), removedTimer);
+            new NotificationsSharedPrefs(getContext()).deleteNotificationsForTimer(removedTimer);
         } catch (IOException e) {
             Log.e(TAG, "Couldn't save timers after deleting one", e);
             timers.add(position, removedTimer);

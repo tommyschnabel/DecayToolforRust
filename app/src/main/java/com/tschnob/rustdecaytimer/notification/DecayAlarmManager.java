@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.tschnob.rustdecaytimer.timer.Time;
 import com.tschnob.rustdecaytimer.timer.TimeHelper;
 import com.tschnob.rustdecaytimer.timer.Timer;
-import com.tschnob.rustdecaytimer.timer.TimerCache;
+import com.tschnob.rustdecaytimer.timer.TimerSharedPrefs;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,11 +26,11 @@ public class DecayAlarmManager extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Decay alarm fired");
-        TimerCache timerCache = new TimerCache(context);
+        TimerSharedPrefs timerSharedPrefs = new TimerSharedPrefs(context);
 
         List<Timer> timers;
         try {
-            timers = timerCache.getTimers();
+            timers = timerSharedPrefs.getTimers();
         } catch (IOException e) {
             Log.e(TAG, "Problem getting timers", e);
             return;
@@ -92,10 +92,11 @@ public class DecayAlarmManager extends BroadcastReceiver {
     }
 
     public void setSavedAlarms(Context context, Timer timer) {
-        NotificationsCache notificationsCache = new NotificationsCache(context);
+        NotificationsSharedPrefs notificationsSharedPrefs = new NotificationsSharedPrefs(context);
         List<NotificationMetaData> notifications;
+
         try {
-            notifications = notificationsCache.getNotifications(timer);
+            notifications = notificationsSharedPrefs.getNotifications(timer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -140,13 +141,13 @@ public class DecayAlarmManager extends BroadcastReceiver {
         alarmManager.cancel(getAlarmPendingIntent(context, notifcation));
     }
 
-    public void cancelAlarmsForTimer(Context context, Timer timer) {
+    public void cancelAllAlarmsForTimer(Context context, Timer timer) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         List<NotificationMetaData> notifications;
 
         try {
             //Get the notifications
-            notifications = new NotificationsCache(context).getNotifications(timer);
+            notifications = new NotificationsSharedPrefs(context).getNotifications(timer);
         } catch (IOException e) {
             Log.e(TAG, "Couldn't get notifications, so couldn't cancel alarms for timer");
             Toast.makeText(context, "", Toast.LENGTH_SHORT).show();

@@ -36,10 +36,10 @@ public class NotificationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         ListView notificationsList = (ListView) rootView.findViewById(R.id.notifications_list);
-        NotificationsCache notificationsCache = new NotificationsCache(context);
+        NotificationsSharedPrefs notificationsSharedPrefs = new NotificationsSharedPrefs(context);
 
         try {
-             notifications = notificationsCache.getNotifications(timer);
+             notifications = notificationsSharedPrefs.getNotifications(timer);
         } catch (IOException e) {
             Log.e(TAG, "Problem getting notifications", e);
             notifications = new ArrayList<>();
@@ -50,13 +50,13 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onCancel(int position) {
 
-                NotificationsCache cache = new NotificationsCache(getContext());
+                NotificationsSharedPrefs cache = new NotificationsSharedPrefs(getContext());
                 NotificationMetaData removedNotification = notifications.remove(position);
 
                 try {
                     cache.storeNotifications(notifications, timer);
                     DecayAlarmManager alarmManager = new DecayAlarmManager();
-                    alarmManager.cancelAlarm(getContext(), notifications.get(position));
+                    alarmManager.cancelAlarm(getContext(), removedNotification);
                 } catch (IOException e) {
                     Log.e(TAG, "Couldn't save notification after deleting one", e);
                     notifications.add(position, removedNotification);
@@ -85,7 +85,7 @@ public class NotificationFragment extends Fragment {
     }
 
     public void onNotificationAdded() {
-        NotificationsCache cache = new NotificationsCache(getContext());
+        NotificationsSharedPrefs cache = new NotificationsSharedPrefs(getContext());
 
         try {
             adapter.setNotifications(cache.getNotifications(timer));

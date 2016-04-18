@@ -19,9 +19,9 @@ import com.tschnob.rustdecaytimer.common.ItemType;
 import com.tschnob.rustdecaytimer.common.ThingHappenedCallback;
 import com.tschnob.rustdecaytimer.notification.DecayAlarmManager;
 import com.tschnob.rustdecaytimer.notification.NotificationMetaData;
-import com.tschnob.rustdecaytimer.notification.NotificationsCache;
+import com.tschnob.rustdecaytimer.notification.NotificationsSharedPrefs;
 import com.tschnob.rustdecaytimer.timer.Timer;
-import com.tschnob.rustdecaytimer.timer.TimerCache;
+import com.tschnob.rustdecaytimer.timer.TimerSharedPrefs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,10 +81,10 @@ public class AddTimerDialog extends DialogFragment {
 
                         timer.setLogOffTime(new Date(time));
 
-                        TimerCache timerCache = new TimerCache(getActivity());
+                        TimerSharedPrefs timerSharedPrefs = new TimerSharedPrefs(getActivity());
                         List<Timer> timers;
                         try {
-                            timers = timerCache.getTimers();
+                            timers = timerSharedPrefs.getTimers();
                         } catch (IOException e) {
                             Log.e(TAG, "Problem getting timers", e);
                             timers = new ArrayList<>();
@@ -97,7 +97,7 @@ public class AddTimerDialog extends DialogFragment {
                         timers.add(timer);
 
                         try {
-                            timerCache.storeTimers(timers);
+                            timerSharedPrefs.storeTimers(timers);
                             dialog.dismiss();
                         } catch (IOException e) {
                             Log.e(TAG, "Problem saving timers", e);
@@ -112,7 +112,7 @@ public class AddTimerDialog extends DialogFragment {
                                 new DecayAlarmManager().setDefaultAlarms(getContext(), timer);
 
                         try {
-                            new NotificationsCache(getContext()).storeNotifications(notifications, timer);
+                            new NotificationsSharedPrefs(getContext()).storeNotifications(notifications, timer);
                         } catch (IOException e) {
                             Log.e(TAG, "Couldn't save new notifications");
                             throw new RuntimeException(e);
